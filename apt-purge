@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Find all the packages marked for removal, remove and purge.
+
+sudo apt-get purge $(dpkg -l | grep ^rc | cut -d " " -f 3) $@
