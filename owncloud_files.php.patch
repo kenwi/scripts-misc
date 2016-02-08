@@ -1,0 +1,16 @@
+--- list.php	2016-02-05 11:54:37.577938241 +0100
++++ list-new.php	2016-02-05 13:02:59.256071457 +0100
+@@ -46,6 +46,13 @@
+ 	$sortDirection = isset($_GET['sortdirection']) ? ($_GET['sortdirection'] === 'desc') : false;
+ 	$mimetypeFilters = isset($_GET['mimetypes']) ? json_decode($_GET['mimetypes']) : '';
+ 
++
++        // Hack for sorting (by date) my automatically uploaded files in the directory "Photos"
++        if(strpos($_GET['dir'], 'Photos'))
++        {
++                $sortDirection = 'asc';
++                $sortAttribute = 'mtime';
++        }
+ 	$files = [];
+ 	// Clean up duplicates from array
+ 	if (is_array($mimetypeFilters) && count($mimetypeFilters)) {
