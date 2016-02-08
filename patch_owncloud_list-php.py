@@ -17,7 +17,12 @@ code = """
         }
 """
 with open("/var/www/owncloud/apps/files/ajax/list.php") as file:
+        output = ""
 	for line in file:
+                if "Hack for sorting" in line:
+                    output = "Patch has already been applied!"
+                    break
 		if find in line:
-			sys.stdout.write(code)
-		sys.stdout.write(line)
+                    output += code
+		output += line
+print output
