@@ -1,7 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 LANG=en_US 
-OUT_DIR=~/cloud.wilhelmsen.nu/rtfm/
 
 echo "---
 title: vnstat
@@ -9,9 +8,16 @@ taxonomy:
     category: docs
 ---
 "
-vnstati -d -o $(echo $OUT_DIR)images/day.png
+# Set magic variables for current file & dir
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename ${__file} .sh)"
+__root="$(cd "$(dirname "${__dir}")" && pwd)" 
+
+arg1="${1:-}"
+
+vnstati -d -o "${arg1}/images/day.png"
 echo "![vnstat](/images/day.png)"
 echo ""
 
-vnstat -d | python format_vnstat.py 
-echo "Last updated " $(date +"%F %T")
+vnstat -d | /usr/bin/python "${__dir}/format_vnstat.py"
