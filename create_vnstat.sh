@@ -9,7 +9,7 @@ __root="$(cd "$(dirname "${__dir}")" && pwd)"
 
 arg1="${1:-}"
 
-if [ ! -d "$images" ]; then 
+if [ ! -d "${arg1}/$images" ]; then 
   echo "The directory '${arg1}/images' does not exist."
   exit 1
 fi
