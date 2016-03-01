@@ -8,7 +8,7 @@ read -sp "Enter MySQL password: " mysql_password
 
 backup_src="/var/www/owncloud"
 backup_dst="/var/backups"
-backup_name="owncloud-backup_${date}.tar"
+backup_name="backup_owncloud_${date}.tar"
 
 # Create uncompressed tar archive
 echo "Creating backup: ${backup_dst}/${backup_name}"

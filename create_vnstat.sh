@@ -20,9 +20,14 @@ taxonomy:
     category: docs
 ---
 "
-
-vnstati -d -o "${arg1}/images/day.png"
+vnstati -h -o "${arg1}/images/day.png"
 echo "![vnstat](/images/day.png)"
 echo ""
 
-vnstat -d | /usr/bin/python "${__dir}/format_vnstat.py"
+vnstati -d -o "${arg1}/images/month.png"
+echo "![vnstat](/images/month.png)"
+echo ""
+
+vnstat -d | /usr/bin/python "/root/repos/scripts-misc/format_vnstat.py"
+date +"Last updated: %F %T"
+
