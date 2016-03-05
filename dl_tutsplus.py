@@ -15,11 +15,13 @@ import urllib
 from pyvirtualdisplay import Display
 
 class TutsPlusDigger:
-    def __init__(self, url):
+    def __init__(self, url, username, password):
         print 'Initing hidden display'
         self.display = Display(visible=0, size=(800,600))
         self.downloads = []
         self.url = url
+        self.username = username
+        self.password = password
         
     def __enter__(self):
         print 'Starting hidden display and webdriver'
@@ -33,18 +35,18 @@ class TutsPlusDigger:
         self.display.stop()
         
     def dig(self):
-        #self.login()
+        self.login()
         print 'Visiting %s' % self.url
         self.driver.get(self.url)
         self.get_page_downloads()
         
-    def login(self, username, password):
+    def login(self):
         self.driver.get("https://tutsplus.com/sign_in?redirect_to=https%3A%2F%2Ftutsplus.com%2F")
 
         username = self.driver.find_element_by_id("session_login")
-        username.send_keys(username)
+        username.send_keys(self.username)
         password = self.driver.find_element_by_id("session_password")
-        password.send_keys(password)
+        password.send_keys(self.password)
         password.send_keys(Keys.ENTER)
         print "Logging in"
         sleep(3)   
@@ -91,5 +93,5 @@ class TutsPlusDigger:
         return mp4_url  
         
 address = "https://code.tutsplus.com/courses" if not len(sys.argv) >= 2 else sys.argv[i]
-with TutsPlusDigger(address) as digger:
+with TutsPlusDigger(address, "", "") as digger:
     digger.dig()
