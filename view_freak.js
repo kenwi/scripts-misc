@@ -38,12 +38,6 @@ function getThreadLink(threadId) {
     return "http://freak.no/forum/showthread.php?t=" + threadId + "&goto=newpost";
 }
 
-function writeFile(content) {
-    msg.reply("Call from external");
-    var fs = require('fs');
-    fs.writeFile('/tmp/hadamard.json', content);
-}
-
 module.exports = function (robot) {
     var updateId = null;
     var debug = false;
@@ -63,23 +57,9 @@ module.exports = function (robot) {
         msg.reply(robot.brain.get("debug"));
     });
     
-    robot.respond(/freak off/i, function (msg) {
-        msg.update = null;
-        this.updateId = null;
-        msg.reply("Get your freak off!");
-    });
-    
     robot.respond(/timer off/i, function (msg) {
+        msg.reply("Cleared timer");
         clearInterval(this.updateId);
-    });
-    
-    robot.respond(/timer/i, function(msg) {
-        msg.update = function() {
-            writeFile("Hello world, i = " + i++);
-        };
-
-        if(this.updateId == null )
-            this.updateId = setInterval(msg.update, 60*1000);
     });
     
     robot.respond(/freak on/i, function (msg) {
@@ -132,7 +112,7 @@ module.exports = function (robot) {
         };
         
         if (this.updateId == null) {
-            this.updateId = setInterval(msg.update, 30 * 1000);
+            this.updateId = setInterval(msg.update, 60 * 1000);
             msg.send("Setting time interval for loop");
         }
         msg.send("Started watching forum for new threads and posts");
