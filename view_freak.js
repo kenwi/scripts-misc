@@ -68,13 +68,14 @@ module.exports = function (robot) {
         msg.update = function () {
             var request = require("request");
             var cheerio = require("cheerio");
-            
+            var iconv = require("iconv-lite");
+
             if (robot.brain.get("debug") == true) {
                 msg.send("-");
             }
             
-            request({ uri: "http://freak.no" }, function (error, response, body) {
-                var $ = cheerio.load(body);
+            request({ uri: "http://freak.no", encoding: null }, function (error, response, body) {      
+                var $ = cheerio.load(iconv.decode(body, 'iso-8859-1'));
                 var i = 0;
                 $("tbody#collapseobj_module_5 tr").each(function () {
                     if (i++ >= 5)
@@ -84,8 +85,7 @@ module.exports = function (robot) {
                     var text = getText(e);
                     var link = getLink(e);
                     if (text == "")
-                        return;
-                    
+                        return;                    
                     var forum = getForumName(e);
                     var postcount = getPostCount(e);
                     var date = getDate(e);
@@ -100,11 +100,11 @@ module.exports = function (robot) {
                     }
                     
                     if (numPosts == null && postcount == 0) {
-                        msg.send(":: Ny tråd [" + forum + "] [" + user + "] [" + getThreadLink(threadId) + "] [" + text + "]");
+                        msg.send(`:: Ny trÃ¥d [${forum}] [${user}] [${getThreeadLink(threadaId)}] [${text}]`);
                     }
                     
                     if (postcount > numPosts || (numPosts == null && postcount > 0)) {
-                        msg.send(":: Nytt innlegg [" + forum + "] [" + user + "] [" + getThreadLink(threadId) + "] [" + text + "]");
+                        msg.send(`:: Nytt innlegg [${forum}] [${user}] [${getThreadLink(threadId)}] [${text}]`);
                     }
                     robot.brain.set("id" + threadId, postcount);
                 });
