@@ -50,8 +50,8 @@ int main()
 
 	qsort(integers, nInts, sizeof(int), compare);
 	printf("Sorted : ");
-	for (int i = 0; i < nInts; printf("%d ", integers[i++]))
-		printf("\n");
+	for (int i = 0; i < nInts; printf("%d ", integers[i++]));
+	printf("\n");
 
 	free(integers);
 	integers = NULL;
