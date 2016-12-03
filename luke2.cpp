@@ -3,7 +3,7 @@ https://julekalender.knowit.no/luker/qTYR3HY7HjTPmoLgq
 
 Output:
 + 1.48561e+09
-4.7e+07iterations run in 1657650893ns total, average : 35.2692ns.
+2.35e+08 iterations run in 8.17514e+09ns total, average : 34.7878ns.
 
 Code:
 */
