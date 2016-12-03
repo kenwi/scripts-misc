@@ -1,11 +1,15 @@
 /*
 https://julekalender.knowit.no/luker/qTYR3HY7HjTPmoLgq
 
-Output:
+Oppgave:
+Fibonaccirekken er en tallrekke som genereres ved at man adderer de to foregående tallene i rekken. f.eks. om man starter med 1 og 2 blir de første 10 termene 1, 1, 2, 3, 5, 8, 13, 21, 34 og 55
+Finn summen av alle partall i denne rekken som er mindre enn 4.000.000.000
+
+Resultat:
 + 1.48561e+09
 2.35e+08 iterations run in 8.17514e+09ns total, average : 34.7878ns.
 
-Code:
+Løsning:
 */
 #include <iostream>
 #include <chrono>
