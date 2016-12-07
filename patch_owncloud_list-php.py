@@ -9,7 +9,7 @@ import sys
 
 find = "$files = []"
 code = """
-        // Hack for sorting (by date) my automatically uploaded files in the directory "Photos"
+        // Hack for sorting (by date) by automatically uploaded files in the directory "Photos"
         if(strpos($_GET['dir'], 'Photos'))
         {
                 $sortDirection = 'asc';
