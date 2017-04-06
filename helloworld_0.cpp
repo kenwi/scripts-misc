@@ -1,7 +1,10 @@
 /*
   It's just my kind of hello world. Written in february 2009, excuse my code.
     
-  It should hopefully converge in the result of "Hello World!":
+  It should hopefully converge in the result of "Hello World!". It's basically
+  a genetic algorithm that will generate a population of random strings and use
+  the entropy to evolve and mutate to the desired state. The fitness function is described by 
+  the levenshtein distance from the state.
   
     Generation 0 Best cromosome with fitness 165, Urgtm4g\dS]8
     Generation 1 Best cromosome with fitness 146, iYjfp,?jpZd@
