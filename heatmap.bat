@@ -1,0 +1,1 @@
+python heatmap/heatmap.py %1 %1.png
