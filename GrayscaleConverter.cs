@@ -53,9 +53,7 @@ namespace GrayscaleConverter
         {
             int stride = (int)bitmapSource.PixelWidth * (bitmapSource.Format.BitsPerPixel / 8);
             byte[] pixels = new byte[(int)bitmapSource.PixelHeight * stride];
-
             bitmapSource.CopyPixels(pixels, stride, 0);
-
             return pixels;
         }
 
