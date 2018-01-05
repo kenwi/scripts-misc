@@ -1,4 +1,4 @@
-sudo apt update
+sudo apt update -y
 sudo apt install git -y
 git clone https://github.com/fireworm71/veriumMiner
 sudo apt install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev zlib1g-dev
