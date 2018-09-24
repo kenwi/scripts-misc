@@ -30,8 +30,7 @@ and clearly outputs the wrong constant. */
 
 int main() {
 	std::cout.precision(32);
-	const auto che = ([](const int iterations)
-	{
+	const auto che = ([](const int iterations) {
 		double sum = 0, previous = 0;
 		for (double j = 1; j <= 100; j++)
 		{
