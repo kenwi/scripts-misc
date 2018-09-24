@@ -44,11 +44,11 @@ int main() {
 		for (int j = 1; j <= iterations; ++j)
 		{
 			sum += pow(2, -j) * (1 - integral(j));
+			std::cout << j << " " << sum / 2 << std::endl;
 			if (sum == previous) {
 				std::cout << "Completed" << std::endl;
 				break;
 			}
-			std::cout << j << " " << sum / 2 << std::endl;
 			previous = sum;
 		}
 		return sum / 2; 
