@@ -45,13 +45,13 @@ int main() {
 		return sum / 2; 
 	});
 
-	double π = 3.1415926535897932384626433832795;
-	double γ = 0.5772156649015328606065120900824024310421;
-	double Ч = che(100);
-	double α = Ч * π / γ;
-	double Ж = 1 / α;
+	double π = 3.1415926535897932384626433832795,
+		γ = 0.5772156649015328606065120900824024310421,
+		Ч = che(100),
+		α = Ч * π / γ,
+		Ж = 1 / α;
 
-	std::cout <<std::endl;
+	std::cout << std::endl;
 	std::cout << "Che: "  << Ч << std::endl;
 	std::cout << "Euler Gamma: " << γ << std::endl;
 	std::cout << "Inverse alpha: " << α << std::endl;
