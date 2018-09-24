@@ -22,8 +22,8 @@ Fine structure constant (1/alpha): 6.2398678976323269651516056910623
 
 https://drive.google.com/file/d/1WPsVhtBQmdgQl25_evlGQ1mmTQE0Ww4a/view 
 
-Implementation is probably wrong (on my end (as well?)) 
-and clearly outputs the wrong constant. */
+Implementation is probably wrong and clearly outputs the wrong constant. 
+*/
 
 #include <iostream>
 #include <cmath>
