@@ -1,5 +1,5 @@
 /*
-Implementation is probably wrong and clearly outputs the wrong value for the constant Ч.
+Implementation is probably wrong and clearly outputs the incorrect value for the constant Ч.
 
 OUTPUT: 
 1 0
