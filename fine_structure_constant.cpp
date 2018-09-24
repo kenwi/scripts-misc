@@ -23,15 +23,15 @@ Che: 0.2934900048873340105970442
 Euler Gamma: 0.5772156649015328655494272
 Inverse alpha: 1.597368365623565100719361
 Fine structure constant (1/alpha): 0.6260296757596234273890445
-*/
+
+https://drive.google.com/file/d/1WPsVhtBQmdgQl25_evlGQ1mmTQE0Ww4a/view 
+
+Implementation is probably wrong (on my end (as well?)) 
+and clearly outputs the wrong constant. */
+
 #include <iostream>
 #include <cmath>
 
-/* https://drive.google.com/file/d/1WPsVhtBQmdgQl25_evlGQ1mmTQE0Ww4a/view */
-
-/* Implementation is probably wrong (on my end (as well?))
-  and clearly outputs the wrong constant. */
-  
 int main() {
 	std::cout.precision(25);
 	/*
