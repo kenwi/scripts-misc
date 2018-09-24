@@ -38,21 +38,20 @@ int main() {
 		Ч/γ = Ж/π
 		Ч = Ж/π * γ
 	*/
-	auto che = ([](int iterations) 
+	auto che = ([](int iterations, double(integral)(int j) )
 	{
 		long double sum = 0;
 		for (int j = 1; j <= iterations; ++j)
 		{
-			const double integral = ((j + 1 / j)  * log(j) - j + 1 / j) / log(2);
-			sum += pow(2, -j) * (1 - integral);
-
+			sum += pow(2, -j) * (1 - integral(j));
 			std::cout << j << " " << sum / 2 << std::endl;
 		}
 		return sum / 2; 
 	});
 
+	auto integral = ([](int j) { return ((j + 1 / j)  * log(j) - j + 1 / j) / log(2); });
 	double π = 3.14159265358979323846264338327950;
-	double Ч = che(100);
+	double Ч = che(100, integral);
 	double γ = 0.5772156649015328606065120900824024310421;
 	double α = Ч * π / γ;
 	double Ж = 1 / α;
