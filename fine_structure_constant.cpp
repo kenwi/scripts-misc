@@ -32,8 +32,7 @@ https://drive.google.com/file/d/1WPsVhtBQmdgQl25_evlGQ1mmTQE0Ww4a/view
 int main() {
 	std::cout.precision(32);
 	const auto che = ([](const int iterations, void (output)(const double, const double sum) ) {
-		double sum = 0, previous = 0;
-		
+		double sum = 0, previous = 0;		
 		for (double j = 1; j <= iterations; j++) {
 			const double integral = ((j + 1 / j)  * log(j) - j + 1 / j) / log(2);
 			sum += pow(2, -j) * (1 - integral);
