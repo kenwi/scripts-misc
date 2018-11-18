@@ -45,13 +45,13 @@ int main() {
 		return sum / 2;
 	});
 
-	const auto output = ([](const double j, const double sum) {
+	const auto intermediate_output = ([](const double j, const double sum) {
 		std::cout << j << " " << sum / 2 << std::endl;
 	});
 
 	const double π = 3.1415926535897932384626433832795,
 		γ = 0.5772156649015328606065120900824024310421,
-		Ч = che(100, output),
+		Ч = che(100, intermediate_output),
 		α = Ч * π / γ,
 		Ж = 1 / α;
 
