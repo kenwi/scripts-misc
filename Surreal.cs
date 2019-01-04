@@ -1,31 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MatheMagics
 {
     public class SurrealNumber
     {
         public int Value;
-        List<SurrealNumber> Left;
-        List<SurrealNumber> Right;
-        
-        public SurrealNumber(List<SurrealNumber> Left, List<SurrealNumber> Right)
-        {
-            IsWellFormed(Left, Right);
+        List<SurrealNumber> LeftSet;
+        List<SurrealNumber> RightSet;
 
-            this.Left = Left;
-            this.Right = Right;
+        public SurrealNumber(List<SurrealNumber> LeftSet, List<SurrealNumber> RightSet)
+        {
+            IsWellFormed(LeftSet, RightSet);
+
+            this.LeftSet = LeftSet;
+            this.RightSet = RightSet;
         }
 
         /* 
             A Surreal number is well-formed is no member of the right set
             is left-than or equal to a member of the left set. 
         */
-        bool IsWellFormed(List<SurrealNumber> Left, List<SurrealNumber> Right)
+        bool IsWellFormed(List<SurrealNumber> LeftSet, List<SurrealNumber> RightSet)
         {
-            foreach (var r in Right)
+            foreach (var r in RightSet)
             {
-                foreach (var l in Left)
+                foreach (var l in LeftSet)
                 {
                     if (r.Value <= 1)
                     {
@@ -41,51 +42,49 @@ namespace MatheMagics
             if and only if y is less than or equal to no member of the left
             set of x, and no member of the right set of y is less than or equal to x.     
          */
-        public static bool operator<(SurrealNumber self, SurrealNumber other)
+        public static bool operator <(SurrealNumber x, SurrealNumber y)
         {
-            foreach(var l in self.Left)
+            foreach (var l in x.LeftSet)
             {
-                if(other.Value <= 1)
+                if (y.Value <= l.Value)
                     return false;
             }
-
-            foreach(var r in other.Right)
+            foreach (var r in y.RightSet)
             {
-                if(r.Value <= self.Value)
+                if (r.Value <= x.Value)
                     return false;
             }
-
-            self.Value = other.Value;
             return true;
         }
 
-        public static bool operator>(SurrealNumber self, SurrealNumber other)
+        public static bool operator >(SurrealNumber self, SurrealNumber other)
         {
-            foreach(var l in self.Left)
-            {
-                if(other.Value <= 1)
-                    return true;
-            }
-
-            foreach(var r in other.Right)
-            {
-                if(r.Value <= self.Value)
-                    return true;
-            }
-
-            return false;
+            return !(self < other);
         }
-
     }
 
     class Program
-    {        
+    {
         static void Main(string[] args)
         {
-            var Ø = new List<SurrealNumber>();            
+            var Ø = new List<SurrealNumber>();
             var zero = new SurrealNumber(Ø, Ø);
-            var one = new SurrealNumber(new List<SurrealNumber>{zero}, Ø);
-            var minusOne = new SurrealNumber(Ø, new List<SurrealNumber>{zero});
+            var zero2 = new SurrealNumber(Ø, Ø);
+
+            Debug.Assert(zero > zero2 == false);
+            Debug.Assert(zero < zero2 == true);
+
+            var one = new SurrealNumber(new List<SurrealNumber> { zero }, Ø);
+            Debug.Assert(one > zero == true);
+            Debug.Assert(one < zero == false);
+
+            var minusOne = new SurrealNumber(Ø, new List<SurrealNumber> { zero });
+            Debug.Assert(minusOne > one == false);
+            Debug.Assert(zero < minusOne == false);
+
+            var minusTwo = new SurrealNumber(Ø, new List<SurrealNumber> { minusOne });
+            Debug.Assert(minusTwo < one == true);
+            Debug.Assert(minusTwo > one == false);
         }
     }
 }
