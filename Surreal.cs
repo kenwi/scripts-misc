@@ -17,13 +17,16 @@ namespace MatheMagics
             this.LeftSet = LeftSet;
             this.RightSet = RightSet;
         }
-        
-        // 1. A Surreal number is well-formed if no member of the right set is left-than or equal to a member of the left set.
-        bool IsWellFormed(List<SurrealNumber> LeftSet, List<SurrealNumber> RightSet) => !RightSet.SelectMany(r => r.LeftSet, (left, right) => right <= left).SingleOrDefault();
-        
-        // 2. A Surreal number x is less than or equal to a surreal number y if and only if y is less than or equal to no member of the left
-        //    set of x, and no member of the right set of y is less than or equal to x.
-        public static bool operator <=(SurrealNumber x, SurrealNumber y) => !x.LeftSet.Exists(left => y <= left) && !y.RightSet.Exists(right => right <= x);
+
+        // 1. A Surreal number is well-formed if no member of the right 
+        //    set is left-than or equal to a member of the left set.
+        bool IsWellFormed(List<SurrealNumber> LeftSet, List<SurrealNumber> RightSet) 
+            => !RightSet.SelectMany(r => r.LeftSet, (left, right) => right <= left).SingleOrDefault();
+
+        // 2. A Surreal number x is less than or equal to a surreal number y if and only if y is less than or equal 
+        //    to no member of the left set of x, and no member of the right set of y is less than or equal to x.
+        public static bool operator <=(SurrealNumber x, SurrealNumber y) 
+            => !x.LeftSet.Exists(left => y <= left) && !y.RightSet.Exists(right => right <= x);
 
         public static bool operator >=(SurrealNumber Left, SurrealNumber Right) => !(Left <= Right);
         public static bool operator <(SurrealNumber Left, SurrealNumber Right) => Left <= Right;
