@@ -20,13 +20,13 @@ namespace MatheMagics
             A Surreal number is well-formed is no member of the right set
             is left-than or equal to a member of the left set. 
         */
-        bool IsWellFormed(List<SurrealNumber> x, List<SurrealNumber> y)
+        bool IsWellFormed(List<SurrealNumber> LeftSet, List<SurrealNumber> RightSet)
         {
-            foreach (var r in y)
+            foreach (var r in RightSet)
             {
-                foreach (var l in x)
+                foreach (var l in LeftSet)
                 {
-                    if (l == r || r < l)
+                    if (r <= l)
                         throw new Exception($"Left {l}, right {r}: not well-formed.");
                 }
             }
@@ -38,21 +38,21 @@ namespace MatheMagics
             if and only if y is less than or equal to no member of the left
             set of x, and no member of the right set of y is less than or equal to x.     
          */
-        public static bool operator <=(SurrealNumber x, SurrealNumber y)
+        public static bool operator <=(SurrealNumber Left, SurrealNumber Right)
         {
-            foreach (var l in x.LeftSet)
-                if (y <= l)
+            foreach (var l in Left.LeftSet)
+                if (Right <= l)
                     return false;
-            foreach (var r in y.RightSet)
-                if (r <= x)
+            foreach (var r in Right.RightSet)
+                if (r <= Left)
                     return false;
             return true;
         }
-        public static bool operator >=(SurrealNumber x, SurrealNumber y) => !(x <= y);
-        public static bool operator <(SurrealNumber x, SurrealNumber y) => x <= y;
-        public static bool operator >(SurrealNumber x, SurrealNumber y) => !(x < y);
-        public static bool operator ==(SurrealNumber x, SurrealNumber y) => x <= y && y <= x;
-        public static bool operator !=(SurrealNumber x, SurrealNumber y) => !(x == y);
+        public static bool operator >=(SurrealNumber Left, SurrealNumber Right) => !(Left <= Right);
+        public static bool operator <(SurrealNumber Left, SurrealNumber Right) => Left <= Right;
+        public static bool operator >(SurrealNumber Left, SurrealNumber Right) => !(Left < Right);
+        public static bool operator ==(SurrealNumber Left, SurrealNumber Right) => Left <= Right && Right <= Left;
+        public static bool operator !=(SurrealNumber Left, SurrealNumber Right) => !(Left == Right);
 
     }
 
