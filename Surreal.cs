@@ -20,19 +20,19 @@ namespace MatheMagics
             A Surreal number is well-formed is no member of the right set
             is left-than or equal to a member of the left set. 
         */
-        bool IsWellFormed(List<SurrealNumber> LeftSet, List<SurrealNumber> RightSet)
+        bool IsWellFormed(List<SurrealNumber> x, List<SurrealNumber> y)
         {
-            foreach (var r in RightSet)
+            foreach (var r in y)
             {
-                foreach (var l in LeftSet)
+                foreach (var l in x)
                 {
-                    if (l == r)
-                        throw new Exception($"Left {l}, right {r} not well-formed.");
+                    if (l == r || r < l)
+                        throw new Exception($"Left {l}, right {r}: not well-formed.");
                 }
             }
             return true;
         }
-
+                
         /*
             A Surreal number x is less than or equal to a surreal number y
             if and only if y is less than or equal to no member of the left
@@ -51,6 +51,9 @@ namespace MatheMagics
         public static bool operator >=(SurrealNumber x, SurrealNumber y) => !(x <= y);
         public static bool operator <(SurrealNumber x, SurrealNumber y) => x <= y;
         public static bool operator >(SurrealNumber x, SurrealNumber y) => !(x < y);
+        public static bool operator ==(SurrealNumber x, SurrealNumber y) => x <= y && y <= x;
+        public static bool operator !=(SurrealNumber x, SurrealNumber y) => !(x == y);
+
     }
 
     class Program
@@ -71,7 +74,7 @@ namespace MatheMagics
             var nine = new SurrealNumber(new List<SurrealNumber> { eight }, Ø);
 
             var minusZero = new SurrealNumber(Ø, Ø);
-            var minusOne = new SurrealNumber(Ø, new List<SurrealNumber> { zero });            
+            var minusOne = new SurrealNumber(Ø, new List<SurrealNumber> { minusZero });            
             var minusTwo = new SurrealNumber(Ø, new List<SurrealNumber> { minusOne });            
             var minusThree = new SurrealNumber(Ø, new List<SurrealNumber> { minusTwo });
             var minusFour = new SurrealNumber(Ø, new List<SurrealNumber> { minusThree });
@@ -80,9 +83,7 @@ namespace MatheMagics
             var minusSeven = new SurrealNumber(Ø, new List<SurrealNumber> { minusSix });
             var minusEight = new SurrealNumber(Ø, new List<SurrealNumber> { minusSeven });
             var minusNine = new SurrealNumber(Ø, new List<SurrealNumber> { minusEight });
-
-            Debug.Assert(zero > minusZero == false);
-            Debug.Assert(zero < minusZero == true);
+            
             Debug.Assert(one > zero == true);
             Debug.Assert(one < zero == false);
             Debug.Assert(minusOne > one == false);
@@ -91,6 +92,10 @@ namespace MatheMagics
             Debug.Assert(minusTwo > one == false);
             Debug.Assert(nine > minusNine == true);
             Debug.Assert(minusEight > eight == false);
+
+            Debug.Assert(zero > minusZero == false);
+            Debug.Assert(zero < minusZero == true);
+            Debug.Assert(zero == minusZero);
         }
     }
 }
