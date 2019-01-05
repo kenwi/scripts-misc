@@ -6,7 +6,6 @@ namespace MatheMagics
 {
     public class SurrealNumber
     {
-        public int Value;
         List<SurrealNumber> LeftSet;
         List<SurrealNumber> RightSet;
 
@@ -28,10 +27,8 @@ namespace MatheMagics
             {
                 foreach (var l in LeftSet)
                 {
-                    if (r.Value <= 1)
-                    {
-                        throw new Exception($"Left {l.Value}, right {r.Value} not well-formed.");
-                    }
+                    if (l == r)
+                        throw new Exception($"Left {l}, right {r} not well-formed.");
                 }
             }
             return true;
@@ -42,25 +39,19 @@ namespace MatheMagics
             if and only if y is less than or equal to no member of the left
             set of x, and no member of the right set of y is less than or equal to x.     
          */
-        public static bool operator <(SurrealNumber x, SurrealNumber y)
+        public static bool operator <=(SurrealNumber x, SurrealNumber y)
         {
             foreach (var l in x.LeftSet)
-            {
-                if (y.Value <= l.Value)
+                if (y <= l)
                     return false;
-            }
             foreach (var r in y.RightSet)
-            {
-                if (r.Value <= x.Value)
+                if (r <= x)
                     return false;
-            }
             return true;
         }
-
-        public static bool operator >(SurrealNumber self, SurrealNumber other)
-        {
-            return !(self < other);
-        }
+        public static bool operator >=(SurrealNumber x, SurrealNumber y) => !(x <= y);
+        public static bool operator <(SurrealNumber x, SurrealNumber y) => x <= y;
+        public static bool operator >(SurrealNumber x, SurrealNumber y) => !(x < y);
     }
 
     class Program
