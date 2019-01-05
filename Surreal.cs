@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -11,49 +12,24 @@ namespace MatheMagics
 
         public SurrealNumber(List<SurrealNumber> LeftSet, List<SurrealNumber> RightSet)
         {
-            IsWellFormed(LeftSet, RightSet);
+            if(!IsWellFormed(LeftSet, RightSet))
+                throw new Exception($"Left {LeftSet}, right {RightSet}: not well-formed.");
             this.LeftSet = LeftSet;
             this.RightSet = RightSet;
         }
+        
+        // 1. A Surreal number is well-formed if no member of the right set is left-than or equal to a member of the left set.
+        bool IsWellFormed(List<SurrealNumber> LeftSet, List<SurrealNumber> RightSet) => !RightSet.SelectMany(r => r.LeftSet, (left, right) => right <= left).SingleOrDefault();
+        
+        // 2. A Surreal number x is less than or equal to a surreal number y if and only if y is less than or equal to no member of the left
+        //    set of x, and no member of the right set of y is less than or equal to x.
+        public static bool operator <=(SurrealNumber x, SurrealNumber y) => !x.LeftSet.Exists(left => y <= left) && !y.RightSet.Exists(right => right <= x);
 
-        /* 
-            A Surreal number is well-formed is no member of the right set
-            is left-than or equal to a member of the left set. 
-        */
-        bool IsWellFormed(List<SurrealNumber> LeftSet, List<SurrealNumber> RightSet)
-        {
-            foreach (var r in RightSet)
-            {
-                foreach (var l in LeftSet)
-                {
-                    if (r <= l)
-                        throw new Exception($"Left {l}, right {r}: not well-formed.");
-                }
-            }
-            return true;
-        }
-                
-        /*
-            A Surreal number x is less than or equal to a surreal number y
-            if and only if y is less than or equal to no member of the left
-            set of x, and no member of the right set of y is less than or equal to x.     
-         */
-        public static bool operator <=(SurrealNumber Left, SurrealNumber Right)
-        {
-            foreach (var l in Left.LeftSet)
-                if (Right <= l)
-                    return false;
-            foreach (var r in Right.RightSet)
-                if (r <= Left)
-                    return false;
-            return true;
-        }
         public static bool operator >=(SurrealNumber Left, SurrealNumber Right) => !(Left <= Right);
         public static bool operator <(SurrealNumber Left, SurrealNumber Right) => Left <= Right;
         public static bool operator >(SurrealNumber Left, SurrealNumber Right) => !(Left < Right);
         public static bool operator ==(SurrealNumber Left, SurrealNumber Right) => Left <= Right && Right <= Left;
         public static bool operator !=(SurrealNumber Left, SurrealNumber Right) => !(Left == Right);
-
     }
 
     class Program
