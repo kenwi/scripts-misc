@@ -12,7 +12,6 @@ namespace MatheMagics
         public SurrealNumber(List<SurrealNumber> LeftSet, List<SurrealNumber> RightSet)
         {
             IsWellFormed(LeftSet, RightSet);
-
             this.LeftSet = LeftSet;
             this.RightSet = RightSet;
         }
