@@ -74,7 +74,7 @@ namespace MatheMagics
 
             Debug.Assert(zero > minusZero == false);
             Debug.Assert(zero < minusZero == true);
-            Debug.Assert(zero == minusZero);
+            Debug.Assert(zero == minusZero == true);
         }
     }
 }
