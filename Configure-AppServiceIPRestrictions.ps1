@@ -9,6 +9,7 @@ function Configure-AppServiceIPRestrictions {
         [Parameter(Mandatory=$true)]
         [string[]]$AppServices,
 
+        [int]$Priority = 100
         [int]$ChunkSize = 8
     )
 
@@ -30,7 +31,7 @@ function Configure-AppServiceIPRestrictions {
             if ($ipRangeChunk) {
                 $ipRangeString = $ipRangeChunk -join ","
                 Write-Host "Adding range: $ipRangeString"
-                Add-AzWebAppAccessRestrictionRule -ResourceGroupName $ResourceGroup -WebAppName $appService -Name $RuleName -Priority 1 -IpAddress $ipRangeString -Action Allow
+                Add-AzWebAppAccessRestrictionRule -ResourceGroupName $ResourceGroup -WebAppName $appService -Name $RuleName -Priority $Priority -IpAddress $ipRangeString -Action Allow
             }
         }
     }
