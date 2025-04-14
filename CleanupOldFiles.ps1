@@ -16,6 +16,9 @@
 .PARAMETER FileType
     File extension to look for. Use "*" for all files. Default is "*".
 
+.PARAMETER Confirm
+    Boolean indicating whether to ask for confirmation before proceeding. Default is true.
+
 .EXAMPLE
     # Clean all files older than 7 days in current directory
     .\cleanup_old_files.ps1
@@ -31,6 +34,10 @@
 .EXAMPLE
     # Clean all .flv files in a directory, keeping files newer than 30 days
     .\cleanup_old_files.ps1 -Path "G:\Recordings" -FileType "flv" -DaysToKeep 30
+
+.EXAMPLE
+    # Run in non-interactive mode (useful for scheduled tasks)
+    .\cleanup_old_files.ps1 -Confirm $false
 #>
 
 # Define parameters
@@ -45,7 +52,10 @@ param(
     [string]$Path = ".",
 
     [Parameter(Mandatory = $false)]
-    [string]$FileType = "*"
+    [string]$FileType = "*",
+
+    [Parameter(Mandatory = $false)]
+    [bool]$Confirm = $true
 )
 
 # Set error action preference
@@ -82,6 +92,15 @@ try {
     Write-Log "Cutoff date: $($cutoffDate.ToString('yyyy-MM-dd'))"
     if ($ExcludePattern.Count -gt 0) {
         Write-Log "Excluding files matching patterns: $($ExcludePattern -join ', ')"
+    }
+
+    # Ask for confirmation before proceeding if Confirm is true
+    if ($Confirm) {
+        $confirmation = Read-Host "Do you want to proceed with deleting $totalFiles files? (Y/N)"
+        if ($confirmation -ne 'Y') {
+            Write-Log "Operation cancelled by user"
+            exit 0
+        }
     }
     
     foreach ($file in $files) {
