@@ -1,4 +1,7 @@
 <#
+.SYNOPSIS
+    Cleans up old files based on their last write time and optional exclusion patterns.
+
 .DESCRIPTION
     This script deletes files older than a specified number of days from a target directory.
     It supports excluding files based on wildcard patterns and can work with any file type.
@@ -24,27 +27,27 @@
 
 .EXAMPLE
     # Clean all files older than 7 days in current directory
-    .\CleanupFiles.ps1
+    .\CleanupOldFiles.ps1
 
 .EXAMPLE
     # Clean all .mp4 files older than 14 days in a specific directory
-    .\CleanupFiles.ps1 -DaysToKeep 14 -Path "G:\Videos" -FileType "mp4"
+    .\CleanupOldFiles.ps1 -DaysToKeep 14 -Path "G:\Videos" -FileType "mp4"
 
 .EXAMPLE
     # Clean all files except those containing "test" or "backup" in their name
-    .\CleanupFiles.ps1 -ExcludePattern "*test*","*backup*"
+    .\CleanupOldFiles.ps1 -ExcludePattern "*test*","*backup*"
 
 .EXAMPLE
     # Clean all .flv files in a directory, keeping files newer than 30 days
-    .\CleanupFiles.ps1 -Path "G:\Recordings" -FileType "flv" -DaysToKeep 30
+    .\CleanupOldFiles.ps1 -Path "G:\Recordings" -FileType "flv" -DaysToKeep 30
 
 .EXAMPLE
     # Run in non-interactive mode (useful for scheduled tasks)
-    .\CleanupFiles.ps1 -NoConfirm
+    .\CleanupOldFiles.ps1 -NoConfirm
 
 .EXAMPLE
     # Simulate deletion without actually deleting files
-    .\CleanupFiles.ps1 -WhatIf
+    .\CleanupOldFiles.ps1 -WhatIf
 #>
 param(
     [Parameter(Mandatory = $false)]
@@ -79,10 +82,7 @@ function Write-Log {
 try {
     $cutoffDate = (Get-Date).AddDays(-$DaysToKeep)
     $files = Get-ChildItem -Path (Join-Path $Path "*.$FileType") -File
-    $deletedCount = 0
-    $totalSize = 0
     $totalFiles = $files.Count
-    $currentFile = 0
 
     Write-Log "Starting cleanup of .$FileType files older than $DaysToKeep days in path: $Path"
     Write-Log "Found $totalFiles files to process"
@@ -91,13 +91,47 @@ try {
         Write-Log "Excluding files matching patterns: $($ExcludePattern -join ', ')"
     }
 
+    # Pre-calculate how many files will be deleted vs skipped
+    $filesToDelete = 0
+    $filesToSkip = 0
+    $potentialSize = 0
+
+    foreach ($file in $files) {
+        $shouldExclude = $false
+        foreach ($pattern in $ExcludePattern) {
+            if ($file.Name -like $pattern) {
+                $shouldExclude = $true
+                break
+            }
+        }
+        
+        if (-not $shouldExclude -and $file.LastWriteTime -lt $cutoffDate) {
+            $filesToDelete++
+            $potentialSize += $file.Length
+        } else {
+            $filesToSkip++
+        }
+    }
+
+    $potentialSizeGB = [math]::Round($potentialSize / 1GB, 2)
     if (-not $NoConfirm) {
-        $confirmation = Read-Host "Do you want to proceed with deleting files? (Y/N)"
+        Write-Host "`nSummary:" -ForegroundColor Cyan
+        Write-Host "- Files to delete: $($filesToDelete.ToString('N0'))" -ForegroundColor Yellow
+        Write-Host "- Files to skip: $($filesToSkip.ToString('N0'))" -ForegroundColor Yellow
+        Write-Host "- Space to be freed: $($potentialSizeGB.ToString('N2')) GB" -ForegroundColor Yellow
+        Write-Host "- Path: $Path" -ForegroundColor Yellow
+        Write-Host "- File type: *.$FileType" -ForegroundColor Yellow
+        $confirmation = Read-Host "`nDo you want to proceed with the deletion? (Y/N)"
         if ($confirmation -ne 'Y') {
             Write-Log "Operation cancelled by user"
             exit 0
         }
     }
+    
+    # Tracking variables for actual deletion
+    $deletedCount = 0
+    $totalSize = 0
+    $currentFile = 0
     
     foreach ($file in $files) {
         $currentFile++
