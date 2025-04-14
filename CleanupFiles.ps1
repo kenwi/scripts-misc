@@ -16,28 +16,35 @@
 .PARAMETER FileType
     File extension to look for. Use "*" for all files. Default is "*".
 
-.PARAMETER Confirm
-    Boolean indicating whether to ask for confirmation before proceeding. Default is true.
+.PARAMETER NoConfirm
+    Switch parameter to skip confirmation prompt. Default is to ask for confirmation.
+
+.PARAMETER WhatIf
+    Switch parameter to simulate the deletion without actually deleting the files.
 
 .EXAMPLE
     # Clean all files older than 7 days in current directory
-    .\CleanupOldFiles.ps1
+    .\CleanupFiles.ps1
 
 .EXAMPLE
     # Clean all .mp4 files older than 14 days in a specific directory
-    .\CleanupOldFiles.ps1 -DaysToKeep 14 -Path "G:\Videos" -FileType "mp4"
+    .\CleanupFiles.ps1 -DaysToKeep 14 -Path "G:\Videos" -FileType "mp4"
 
 .EXAMPLE
     # Clean all files except those containing "test" or "backup" in their name
-    .\CleanupOldFiles.ps1 -ExcludePattern "*test*","*backup*"
+    .\CleanupFiles.ps1 -ExcludePattern "*test*","*backup*"
 
 .EXAMPLE
     # Clean all .flv files in a directory, keeping files newer than 30 days
-    .\CleanupOldFiles.ps1 -Path "G:\Recordings" -FileType "flv" -DaysToKeep 30
+    .\CleanupFiles.ps1 -Path "G:\Recordings" -FileType "flv" -DaysToKeep 30
 
 .EXAMPLE
     # Run in non-interactive mode (useful for scheduled tasks)
-    .\CleanupOldFiles.ps1 -Confirm $false
+    .\CleanupFiles.ps1 -NoConfirm
+
+.EXAMPLE
+    # Simulate deletion without actually deleting files
+    .\CleanupFiles.ps1 -WhatIf
 #>
 param(
     [Parameter(Mandatory = $false)]
@@ -53,7 +60,10 @@ param(
     [string]$FileType = "*",
 
     [Parameter(Mandatory = $false)]
-    [bool]$Confirm = $true
+    [switch]$NoConfirm,
+
+    [Parameter(Mandatory = $false)]
+    [switch]$WhatIf
 )
 
 $ErrorActionPreference = "Stop"
@@ -81,7 +91,7 @@ try {
         Write-Log "Excluding files matching patterns: $($ExcludePattern -join ', ')"
     }
 
-    if ($Confirm) {
+    if (-not $NoConfirm) {
         $confirmation = Read-Host "Do you want to proceed with deleting files? (Y/N)"
         if ($confirmation -ne 'Y') {
             Write-Log "Operation cancelled by user"
@@ -104,8 +114,12 @@ try {
         
         if (-not $shouldExclude -and $file.LastWriteTime -lt $cutoffDate) {
             try {
-                Remove-Item -Path $file.FullName -Force
-                Write-Log "[$progress%] Deleted: $($file.Name)"
+                if ($WhatIf) {
+                    Write-Log "[$progress%] WhatIf: Would delete: $($file.Name)"
+                } else {
+                    Remove-Item -Path $file.FullName -Force
+                    Write-Log "[$progress%] Deleted: $($file.Name)"
+                }
                 $deletedCount++
                 $totalSize += $file.Length
             }
