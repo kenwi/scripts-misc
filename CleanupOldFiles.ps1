@@ -21,26 +21,24 @@
 
 .EXAMPLE
     # Clean all files older than 7 days in current directory
-    .\cleanup_old_files.ps1
+    .\CleanupOldFiles.ps1
 
 .EXAMPLE
     # Clean all .mp4 files older than 14 days in a specific directory
-    .\cleanup_old_files.ps1 -DaysToKeep 14 -Path "G:\Videos" -FileType "mp4"
+    .\CleanupOldFiles.ps1 -DaysToKeep 14 -Path "G:\Videos" -FileType "mp4"
 
 .EXAMPLE
     # Clean all files except those containing "test" or "backup" in their name
-    .\cleanup_old_files.ps1 -ExcludePattern "*test*","*backup*"
+    .\CleanupOldFiles.ps1 -ExcludePattern "*test*","*backup*"
 
 .EXAMPLE
     # Clean all .flv files in a directory, keeping files newer than 30 days
-    .\cleanup_old_files.ps1 -Path "G:\Recordings" -FileType "flv" -DaysToKeep 30
+    .\CleanupOldFiles.ps1 -Path "G:\Recordings" -FileType "flv" -DaysToKeep 30
 
 .EXAMPLE
     # Run in non-interactive mode (useful for scheduled tasks)
-    .\cleanup_old_files.ps1 -Confirm $false
+    .\CleanupOldFiles.ps1 -Confirm $false
 #>
-
-# Define parameters
 param(
     [Parameter(Mandatory = $false)]
     [int]$DaysToKeep = 7,
@@ -58,10 +56,8 @@ param(
     [bool]$Confirm = $true
 )
 
-# Set error action preference
 $ErrorActionPreference = "Stop"
 
-# Function to write to log
 function Write-Log {
     param(
         [string]$Message
@@ -71,19 +67,10 @@ function Write-Log {
 }
 
 try {
-    # Get current date
     $cutoffDate = (Get-Date).AddDays(-$DaysToKeep)
-    
-    # Get all files of specified type in target directory
     $files = Get-ChildItem -Path (Join-Path $Path "*.$FileType") -File
-    
-    # Counter for deleted files
     $deletedCount = 0
-    
-    # Track the total size of deleted files
     $totalSize = 0
-
-    # Calculate total files to process
     $totalFiles = $files.Count
     $currentFile = 0
 
@@ -94,9 +81,8 @@ try {
         Write-Log "Excluding files matching patterns: $($ExcludePattern -join ', ')"
     }
 
-    # Ask for confirmation before proceeding if Confirm is true
     if ($Confirm) {
-        $confirmation = Read-Host "Do you want to proceed with deleting $totalFiles files? (Y/N)"
+        $confirmation = Read-Host "Do you want to proceed with deleting files? (Y/N)"
         if ($confirmation -ne 'Y') {
             Write-Log "Operation cancelled by user"
             exit 0
@@ -107,7 +93,6 @@ try {
         $currentFile++
         $progress = [math]::Round(($currentFile / $totalFiles) * 100, 1).ToString('N1')
         
-        # Check if file matches any exclude pattern
         $shouldExclude = $false
         foreach ($pattern in $ExcludePattern) {
             if ($file.Name -like $pattern) {
