@@ -18,9 +18,23 @@ KEEP_PATTERNS=(
   ".gitignore"
 )
 
+# Locale and numeric timestamp format (Norwegian: DD.MM.YYYY HH.MM.SS).
+OUTPUT_LOCALE="nb_NO.UTF-8"
+OUTPUT_TIMESTAMP_FORMAT="%d.%m.%Y %H.%M.%S"
+
 # ---------------------------------------------------------------------------
 
 pretend=0
+
+timestamp() {
+  # Prefer locale-aware date; fall back if the locale is not installed.
+  LC_ALL="$OUTPUT_LOCALE" date "+$OUTPUT_TIMESTAMP_FORMAT" 2>/dev/null \
+    || date '+%Y-%m-%d %H:%M:%S'
+}
+
+log() {
+  printf '[%s] %s\n' "$(timestamp)" "$*"
+}
 
 usage() {
   cat <<'EOF'
@@ -31,6 +45,8 @@ Only regular files directly in TARGET_DIR are considered (not subdirectories).
 
   --pretend, -n, --dry-run   Show what would be deleted, without deleting
   -h, --help                 Show this help
+
+Timestamps in the log use OUTPUT_LOCALE from the script configuration.
 EOF
 }
 
@@ -94,16 +110,16 @@ for path in "$TARGET_DIR"/*; do
   fi
 
   if [[ "$pretend" -eq 1 ]]; then
-    echo "Would delete: $path"
+    log "Would delete: $path"
   else
-    echo "Deleting: $path"
+    log "Deleting: $path"
     rm -f -- "$path"
   fi
   ((deleted++)) || true
 done
 
 if [[ "$pretend" -eq 1 ]]; then
-  echo "Pretend mode: would delete $deleted file(s), keep $kept file(s)."
+  log "Pretend mode: would delete $deleted file(s), keep $kept file(s)."
 else
-  echo "Deleted $deleted file(s), kept $kept file(s)."
+  log "Deleted $deleted file(s), kept $kept file(s)."
 fi
